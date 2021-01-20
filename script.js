@@ -28,13 +28,11 @@ function start() {
 
         // 사진에서 얼굴을 식별한다.
         const detections = await faceapi.detectAllFaces(image)
-            .withFaceLandmarks()
-            .withFaceDescriptors();
+            .withFaceLandmarks();
 
         // 사진에서 얼굴 좌표에 점을 그린다.
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
         faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-        console.log(detections);
-
+        console.log(detections[0].landmarks.positions);
     })
 }
