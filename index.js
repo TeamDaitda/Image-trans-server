@@ -5,6 +5,8 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var app = express();
 
+var fs = require('fs');
+
 // DB setting
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -36,4 +38,7 @@ app.use('/api/image', require('./api/image'));
 var port = 3000;
 app.listen(port, function() {
     console.log('server on! http://localhost:' + port);
+
+    var dir = './uploadedFiles';
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 });
