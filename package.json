@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "node index.js"
+        "start": "npm rebuild bcrypt --build-from-source && node index.js"
     },
     "author": "",
     "license": "ISC",
