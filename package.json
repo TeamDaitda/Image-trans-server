@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "name": "facetest",
     "version": "1.0.0",
     "description": "",
@@ -20,4 +21,22 @@
         "mongoose": "^5.11.14",
         "multer": "^1.4.2"
     }
+=======
+  "name": "facetest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "canvas": "^2.6.1",
+    "express": "^4.17.1",
+    "face-api.js": "^0.22.2",
+    "mongoose": "^5.11.13"
+  }
+>>>>>>> parent of 7b47270... Merge branch 'Image-Translate-APIs' into main
 }
