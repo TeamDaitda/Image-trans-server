@@ -10,6 +10,7 @@ const canvas = require("canvas");
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
+const { detectAllFaces } = require('face-api.js');
 
 // mokey pathing the faceapi canvas
 const { Canvas, Image, ImageData } = canvas;
@@ -52,10 +53,10 @@ function saveFile(fileName, buf) {
 }
 
 var storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: (req, file, cb) => {
         cb(null, 'uploads/');
     },
-    filename: function(req, file, cb) {
+    filename: (req, file, cb) => {
         cb(null, file.originalname);
     }
 });
@@ -63,20 +64,21 @@ var upload = multer({ dest: 'uploads/' });
 
 
 //  Upload Image
-router.post('/upload', upload.single('image'), function(req, res) {
-    res.send('Uploaded! : ' + req.file); //  Return Object
+router.post('/upload', upload.single('image'), (req, res) => {
+    res.send('Uploaded! : ' + req.file.path); //  Return Object
     console.log(req.file); //  콘솔(터미널)을 통해 req.file Object 내용을 확인 가능
 });
 
 // Image TO Json
 router.get('/translateImage',
-    async function(req, res, next) {
+    async(req, res, next) => {
         // load weights
         await faceDetectionNet.loadFromDisk('weights')
         await faceapi.nets.faceLandmark68Net.loadFromDisk('weights')
 
         // load the image
-        const img = await canvas.loadImage('imgs_src/da.jpeg')
+        const img = await canvas.loadImage('uploads/cf9e446b910f7beac7b3b4e0681fbe59')
+            // const img = await canvas.loadImage('imgs_src/da.jpeg')
 
         // detect the faces with landmarks
         const results = await faceapi.detectAllFaces(img, faceDetectionOptions)
@@ -95,5 +97,40 @@ router.get('/translateImage',
         res.json(results.map(res => res.landmarks).map(res => res._positions))
     }
 );
+
+
+//  Image Upload and Translate to Json
+router.get('/imageUploadAndTranslateToJson', upload.single('image'), async(req, res) => {
+    //  DataBase 에 req.body로 유저 정보를 전달받은 다음 적재.
+    let filePath = req.file.path;
+    console.log(filePath + ' 에 저장 완료.');
+    // async(req, res, next) => {
+    // load weights
+    console.log('faceDetectionNet load from disk weight');
+    await faceDetectionNet.loadFromDisk('weights')
+    console.log('faceLandmark68Net load from disk weight');
+    await faceapi.nets.faceLandmark68Net.loadFromDisk('weights')
+
+    // load the image
+    const img = await canvas.loadImage(filePath);
+
+    // detect the faces with landmarks
+    const results = await faceapi.detectAllFaces(img, faceDetectionOptions)
+        .withFaceLandmarks()
+        // create a new canvas and draw the detection and landmarks
+    const out = faceapi.createCanvasFromMedia(img)
+    faceapi.draw.drawDetections(out, results.map(res => res.detection))
+    faceapi.draw.drawFaceLandmarks(out, results.map(res => res.landmarks), { drawLines: true, color: 'red' })
+
+
+
+    // save the new canvas as image
+    saveFile('faceLandmarkDetection.jpg', out.toBuffer('image/jpeg'))
+    console.log('done, saved results to out/faceLandmarkDetection.jpg')
+    console.log(results.map(res => res.landmarks).map(res => res._positions))
+    res.json(results.map(res => res.landmarks).map(res => res._positions))
+        // }
+
+});
 
 module.exports = router;
