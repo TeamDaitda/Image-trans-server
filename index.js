@@ -4,6 +4,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var app = express();
+const fs = require("fs")
 
 // DB setting
 mongoose.set('useNewUrlParser', true);
@@ -33,17 +34,13 @@ app.use(function(req, res, next) { // 1
 app.use('/api/image', require('./api/image'));
 
 // Port setting
-// var port = 3000;
+var port = 3000;
 
-const port = process.env.PORT;
+// const port = process.env.PORT;
 
 app.listen(port, function() {
     console.log('server on! http://localhost:' + port);
-<<<<<<< HEAD
 
     var dir = './uploadedFiles';
     if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 }); //
-=======
-});
->>>>>>> parent of 7b47270... Merge branch 'Image-Translate-APIs' into main
