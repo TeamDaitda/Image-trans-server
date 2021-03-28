@@ -95,13 +95,22 @@ router.get('/translateImage',
         console.log('done, saved results to out/faceLandmarkDetection.jpg')
         console.log(results.map(res => res.landmarks).map(res => res.positions))
             // res.json(results.map(res => res.landmarks[0]).map(res => res._positions.map))
-        res.json(results.map(res => res.landmarks));
+        var output;
+        results.map(res => res.landmarks).map(res => {
+            output = res.positions;
+        });
+        res.json({ "output": output });
+
     }
 );
 
 
+router.get('/test', (req, res) => {
+    return res.json("테스트 입니다");
+})
+
 //  Image Upload and Translate to Json
-router.get('/imageUploadAndTranslateToJson', upload.single('image'), async(req, res) => {
+router.post('/imageUploadAndTranslateToJson', upload.single('image'), async(req, res) => {
     //  DataBase 에 req.body로 유저 정보를 전달받은 다음 적재.
     let filePath = req.file.path;
     console.log(filePath + ' 에 저장 완료.');
@@ -128,10 +137,15 @@ router.get('/imageUploadAndTranslateToJson', upload.single('image'), async(req, 
     // save the new canvas as image
     saveFile('faceLandmarkDetection.jpg', out.toBuffer('image/jpeg'))
     console.log('done, saved results to out/faceLandmarkDetection.jpg')
-    console.log(results.map(res => res.landmarks).map(res => res._positions))
-    res.json(results.map(res => res.landmarks).map(res => res._positions))
-        // }
+        // console.log(results.map(res => res.landmarks).map(res => res._positions))
 
+    // res.json(results.map(res => res.landmarks).map(res => res._positions))
+    // }
+    var output;
+    results.map(res => res.landmarks).map(res => {
+        output = res.positions;
+    });
+    res.json({ "output": output });
 });
 
 module.exports = router;
