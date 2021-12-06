@@ -1,9 +1,6 @@
 var express = require('express');
 
 var router = express.Router();
-// var Hero = require('../models/hero');
-
-
 
 const faceapi = require("face-api.js");
 const canvas = require("canvas");
@@ -12,7 +9,6 @@ const path = require("path");
 const multer = require("multer");
 const { detectAllFaces } = require('face-api.js');
 
-// mokey pathing the faceapi canvas
 const { Canvas, Image, ImageData } = canvas;
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
